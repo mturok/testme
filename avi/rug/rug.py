@@ -32,23 +32,22 @@ def diamond(rug, dim:int, row:int, col:int):
 
 
 def cube_row(rug, dim:int, row:int, col_start=0):
-  # compute number of cubes
   (height, width)= rug.shape
-  for c in range(col_start, width, dim*2): # start/stop/step
+  for c in range(col_start, width, 2 * dim): # start/stop/step
     last_row = cube(rug, dim, row, c)
   return last_row
 
 
 def diamond_row(rug, dim:int, row:int):
   (height, width)= rug.shape
-  for c in range(dim, width - dim, 2 * dim-1): # start/stop/step
+  for c in range(dim, width - dim + 1, 2 * dim - 1): # start/stop/step
     last_row = diamond(rug, dim, row, c)
   return last_row
 
 
 def triangle_row(rug, dim:int, row:int, invert:bool=False):
   (height, width)= rug.shape
-  for c in range(dim, width - dim, 2 * dim-1): # start/stop/step
+  for c in range(dim, width - dim + 1, 2 * dim -1): # start/stop/step
     last_row = triangle(rug, dim, row, c, invert=invert)
     invert = not invert
   return last_row
