@@ -38,10 +38,8 @@ def diamond_row(rug, dim:int, row:int):
   return last_row
 
 
-def triangle_row(rug, dim:int, row:int):
+def triangle_row(rug, dim:int, row:int, invert:bool=False):
   (height, width)= rug.shape
-  invert = False   # we will alternate normal and inverted triangles
-
   for c in range(dim, width - dim, 2 * dim-1): # start/stop/step
     last_row = triangle(rug, dim, row, c, invert=invert)
     invert = not invert
@@ -71,13 +69,13 @@ WIDTH = 30
 rug = np.zeros((HEIGHT, WIDTH))
 row = line(         rug,    0)
 row = line(         rug,    row+1)
-row = triangle_row( rug, 3, row+2)
+row = triangle_row( rug, 3, row+2, False)
 row = line(         rug,    row+2)
 row = cube_row(     rug, 2, row+1)
 row = diamond_row(  rug, 4, row+1)
 row = cube_row(     rug, 2, row+1)
 row = line(         rug,    row+1)
-row = triangle_row( rug, 3, row+2)
+row = triangle_row( rug, 3, row+2, True)
 row = line(         rug,    row+2)
 row = line(         rug,    row+1)
 
