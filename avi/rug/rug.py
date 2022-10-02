@@ -1,16 +1,18 @@
 import numpy as np
 
+CHAR = '#'
+
 def line(rug, row:int):
   (height, width)= rug.shape
   for c in range(width):
-     rug[row][c] = 1
+     rug[row][c] = CHAR
   return row
 
 
 def cube(rug, dim:int, row:int, col:int):
   for r in range(0, dim, 1):
     for c in range(0, dim, 1):
-      rug[row+r][col+c] = 1
+      rug[row+r][col+c] = CHAR
   return row + dim - 1
 
 
@@ -19,7 +21,7 @@ def triangle(rug, dim:int, row:int, col:int, invert:bool=False):
     # compute the number of columns based on our row
     col_width = r if not invert else dim - r - 1
     for c in range(-col_width, col_width+1, 1): # start/stop/step
-      rug[row+r][col+c] = 1
+      rug[row+r][col+c] = CHAR
   return row + dim - 1
 
 
@@ -56,14 +58,14 @@ def printme(rug):
   (height, width) = rug.shape
   for r in range(height):
     for c in range(width):
-      print('#' if rug[r][c] else ' ', end="")
+      print(rug[r][c], end = "")
     print()
 
 
 HEIGHT = 30
 WIDTH = 30
 
-rug = np.zeros((HEIGHT, WIDTH))
+rug = np.full((HEIGHT, WIDTH), ' ')
 
 row = line(         rug,    0)
 row = line(         rug,    row+1)
