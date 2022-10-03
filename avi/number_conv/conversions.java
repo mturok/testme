@@ -1,11 +1,4 @@
-/*
- * Click `Run` to execute the snippet below!
- */
-
-import java.io.*;
-import java.util.*;
-
-
+import java.util.Scanner;
 
 /*
  * To execute Java, please define "static void main" on a class
@@ -44,10 +37,39 @@ class Solution {
     return output;
   }
 
+  public static int base_str2int(String input) throws Exception{
+    int base = 0;
+    switch(input) {
+      case "hex": base = 16; break;
+      case "dec": base = 10; break;
+      case "oct": base =  8; break;
+      case "bin": base =  2; break;
+      default:  throw new Exception( "Unknown base" + input);
+    };
+    return base;
+  }
+
   public static void main(String[] args) {
     try {
-      System.out.println(from_decimal(255, 16));
-      System.out.println(to_decimal("FF", 16));
+
+      // Using Scanner for Getting Input from User
+      Scanner in = new Scanner(System.in);
+
+      System.out.println("Enter the name of the number system to convert from: bin, or dec, or oct or hex" );
+      int input_base = base_str2int(in.nextLine());
+
+      System.out.println("Enter number as a String:");
+      String input_str = in.nextLine();
+
+      System.out.println("Enter the name of the number system to convert to: bin, or dec, or oct or hex" );
+      int output_base = base_str2int(in.nextLine());
+
+      int decimal = to_decimal(input_str, input_base);
+      String output = from_decimal(decimal, output_base);
+      System.out.println(output);
+
+      // System.out.println(from_decimal(255, 16));
+      // System.out.println(to_decimal("FF", 16));
 
     } catch (Exception e) {
       System.out.println(e.toString());
