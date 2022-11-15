@@ -1,5 +1,7 @@
 
 import java.util.*;
+import java.io.*;
+import java.net.*;
 import java.util.function.*;
 
 
@@ -83,15 +85,6 @@ class Solution{
         System.out.println(guessed);
     }
 
-    public static String get_word() {
-        String words[] = word_list();
-
-        int index = (int) (Math.random() * words.length);
-
-
-        return words[index];
-    }
-
     public static String[] word_list() {
         String words[] = new String[] {
             "alligator",
@@ -108,10 +101,11 @@ class Solution{
         return words;
     }
 
-    public static String[] word_buffered_reader(BufferedReader reader) {
+    public static String[] word_buffered_reader(BufferedReader reader) throws IOException {
         List<String> lines = new ArrayList<String>();
 
-        while((String line = reader.readLine()) != null)
+        String line;
+        while((line = reader.readLine()) != null)
             lines.add(line);
         reader.close();
         return (lines.toArray(new String[]{}));
@@ -124,9 +118,9 @@ class Solution{
             return word_buffered_reader(reader);
         } catch (Exception e) {
             System.out.println(e.toString());
-            System.out.prinln("Using static list of words as fallback")
-            return word_list();
         }
+        System.out.println("Using static list of words as fallback");
+        return word_list();
     }
 
     public static String[] word_url() {
@@ -134,55 +128,67 @@ class Solution{
         try {
             URL url = new URL("https://cs.nyu.edu/~odeh/resources/python/animals.txt");
             // read text returned by server
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             return word_buffered_reader(reader);
         }
         catch (MalformedURLException e) {
             System.out.println("Malformed URL: " + e.getMessage());
-            return word_list();
         }
         catch (IOException e) {
             System.out.println("I/O Error: " + e.getMessage());
-            return word_list();
+
         }
-    }
-
-    public static String[] word_list() {
-        String words[] = new String[] {
-            "alligator",
-            "armadillo",
-            "bear",
-            "beaver",
-            "butterfly",
-            "camel",
-            "chicken",
-            "chipmunk",
-            "cougar",
-            "coyote",
-        };
-        return words;
+        System.out.println("Using static list of words as fallback");
+        return word_list();
     }
 
 
-    public static String init()
+    public static void init()
     {
         for (int i = 0; i < _buffer.length; i++)
             Arrays.fill(_buffer[i], ' ');
 
         gallows();
-        return get_word();
     }
+
+
+    static String[] get_word_list(String mode)  {
+
+        System.out.println("Mode: " + mode);
+
+        switch(mode) {
+        case "list":
+            return word_list();
+        case "file":
+            return word_file();
+        case "url":
+            return word_url();
+        default:
+            System.out.println("Unknown mode: " + mode + ".  Falling back to list" );
+            return word_list();
+        }
+    }
+
 
     public static void main(String[] args) {
 
-        String word = init();
-        StringBuilder guessed = new StringBuilder("_".repeat(word.length()));
+        init();
 
         Scanner in = new Scanner(System.in);
+        System.out.println("Pick source for words: list, file, url");
+        String mode = in.nextLine();
+        String words[] = get_word_list(mode);
+        // for(int i = 0; i < words.length; i++)
+        //     System.out.println(words[i]);
 
-        int i = 0;
-        while(i < _parts.size()) {
+        String word = words[(int) (Math.random() * words.length)];
+        StringBuilder guessed = new StringBuilder("_".repeat(word.length()));
+
+        printme(guessed);
+
+        for(int i =0; i < _parts.size(); ) {
+            System.out.print("\nPick a letter: ");
+
             char guess = in.next().charAt(0);
 
             int index = word.indexOf(guess);
@@ -196,7 +202,6 @@ class Solution{
             }
 
             printme(guessed);
-
             if (guessed.toString().equals(word)) {
                 System.out.println( "You win" );
                 return;
