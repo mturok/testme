@@ -82,7 +82,7 @@ class Solution{
         }
 
         System.out.println();
-        System.out.println(guessed);
+        System.out.println("Guessed so far: " + guessed);
     }
 
     public static String[] word_list() {
@@ -108,7 +108,8 @@ class Solution{
         while((line = reader.readLine()) != null)
             lines.add(line);
         reader.close();
-        return (lines.toArray(new String[]{}));
+
+        return lines.toArray(new String[0]);
     }
 
 
@@ -170,18 +171,40 @@ class Solution{
     }
 
 
-    public static void main(String[] args) {
+    public static String[] filtered_list(Scanner in, String[] words) {
 
-        init();
+        System.out.print("Difficulty: Max Letters: ");
+        int num_letters = in.nextInt();
 
-        Scanner in = new Scanner(System.in);
-        System.out.println("Pick source for words: list, file, url");
+        List<String> filtered = new ArrayList<String>();
+        for (int i = 0; i < words.length; i++ )
+            if (words[i].length() <= num_letters)
+                filtered.add(words[i]);
+
+        return filtered.toArray(new String[0]);
+    }
+
+
+    public static String get_word(Scanner in) {
+
+        System.out.print("Pick source for words: list, file, url: ");
         String mode = in.nextLine();
         String words[] = get_word_list(mode);
-        // for(int i = 0; i < words.length; i++)
-        //     System.out.println(words[i]);
 
-        String word = words[(int) (Math.random() * words.length)];
+        words = filtered_list(in, words);
+        for(int i = 0; i < words.length; i++)
+            System.out.println(words[i]);
+
+        int index = (int) (Math.random() * words.length);
+        String word = words[index];
+        return word;
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+
+        init();
+        String word = get_word(in);
 
         // Strings are immutable. StringBuilder class lets us change chars.
         // Initialize the guessed word with underscores
@@ -196,7 +219,8 @@ class Solution{
             if (index == -1) // guessed wrong
                 _parts.get(i++).run(); // add a part to hangman
             else {
-                // loop across all occurrences of letter in the word
+                // found the character in the word.
+                // Find  all occurrences by looping
                 while (index >= 0) {
                     guessed.setCharAt(index, guess);
                     index = word.indexOf(guess, index + 1);
@@ -205,11 +229,11 @@ class Solution{
 
             printme(guessed);
             if (guessed.toString().equals(word)) {
-                System.out.println( "You win" );
+                System.out.println( "==> You win" );
                 return;
             };
         }
-        System.out.println( "You lose: " + word );
+        System.out.println( "==> You lose: " + word );
     }
 }
 
