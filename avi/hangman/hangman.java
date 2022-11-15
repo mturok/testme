@@ -182,19 +182,21 @@ class Solution{
         //     System.out.println(words[i]);
 
         String word = words[(int) (Math.random() * words.length)];
-        StringBuilder guessed = new StringBuilder("_".repeat(word.length()));
 
+        // Strings are immutable. StringBuilder class lets us change chars.
+        // Initialize the guessed word with underscores
+        StringBuilder guessed = new StringBuilder("_".repeat(word.length()));
         printme(guessed);
 
-        for(int i =0; i < _parts.size(); ) {
+        for(int i = 0; i < _parts.size(); ) {
             System.out.print("\nPick a letter: ");
 
             char guess = in.next().charAt(0);
-
             int index = word.indexOf(guess);
             if (index == -1) // guessed wrong
-                _parts.get(i++).run();
+                _parts.get(i++).run(); // add a part to hangman
             else {
+                // loop across all occurrences of letter in the word
                 while (index >= 0) {
                     guessed.setCharAt(index, guess);
                     index = word.indexOf(guess, index + 1);
