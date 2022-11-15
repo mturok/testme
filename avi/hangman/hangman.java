@@ -173,7 +173,7 @@ class Solution{
 
     public static String[] filtered_list(Scanner in, String[] words) {
 
-        System.out.print("Difficulty: Max Letters: ");
+        System.out.print("Difficulty: Max Number of Letters: ");
         int num_letters = in.nextInt();
 
         List<String> filtered = new ArrayList<String>();
