@@ -153,7 +153,9 @@ class Solution{
     }
 
 
-    static String[] get_word_list(String mode)  {
+    static String[] get_word_list(Scanner in)  {
+        System.out.print("Pick source for words: list, file, url: ");
+        String mode = in.nextLine();
 
         System.out.println("Mode: " + mode);
 
@@ -174,11 +176,21 @@ class Solution{
     public static String[] filtered_list(Scanner in, String[] words) {
 
         System.out.print("Difficulty: Max Number of Letters: ");
-        int num_letters = in.nextInt();
+        int max_letters = in.nextInt();
+
+        // find the minimum length of the strings in the list
+        int min_word_size = Integer.MAX_VALUE;
+        for (int i = 0; i < words.length; i++ )
+            min_word_size = Math.min(words[i].length(), min_word_size);
+
+        if (max_letters < min_word_size) {
+            System.out.println("==> List has min word size: " + min_word_size + ".  Using that for filter.");
+            max_letters = min_word_size;
+        }
 
         List<String> filtered = new ArrayList<String>();
         for (int i = 0; i < words.length; i++ )
-            if (words[i].length() <= num_letters)
+            if (words[i].length() <= max_letters)
                 filtered.add(words[i]);
 
         return filtered.toArray(new String[0]);
@@ -187,17 +199,16 @@ class Solution{
 
     public static String get_word(Scanner in) {
 
-        System.out.print("Pick source for words: list, file, url: ");
-        String mode = in.nextLine();
-        String words[] = get_word_list(mode);
+        String words[] = get_word_list(in);
 
         words = filtered_list(in, words);
-        for(int i = 0; i < words.length; i++)
-            System.out.println(words[i]);
+
+        // helpful for debugging
+        // for(int i = 0; i < words.length; i++)
+        //     System.out.println(words[i]);
 
         int index = (int) (Math.random() * words.length);
-        String word = words[index];
-        return word;
+        return words[index];
     }
 
     public static void main(String[] args) {
