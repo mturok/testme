@@ -11,18 +11,19 @@ class Solution {
     static char[][] _board = new char[DIMENSION][DIMENSION];
     static char[][] _guesses = new char[DIMENSION][DIMENSION];
 
-    static String _columns = "ABCDEFGHIJ";
 
     public static void init(char[][] buffer) {
         for (int i = 0; i < buffer.length; i++)
             Arrays.fill(buffer[i], ' ');
     }
 
+
     static int check_bounds(int guess) throws Exception {
         if (guess < 0 || guess >= DIMENSION)
             throw new Exception();
         return guess;
     }
+
 
     static int[] get_guess(Scanner in) {
 
@@ -31,7 +32,6 @@ class Solution {
             String guess = in.nextLine();
 
             try {
-                // https://www.geeksforgeeks.org/java-program-to-convert-char-to-int/
                 int col = check_bounds(guess.charAt(0) - 'A');
                 int row = check_bounds(Integer.parseInt(guess.substring(1)));
 
@@ -43,10 +43,11 @@ class Solution {
         }
     }
 
-    static void print_board(char[][] buffer) {
 
+    static void print_board(char[][] buffer) {
         String delim  = "+---";
         System.out.print(" ");
+
         for (char c = 'A'; c < 'A' + DIMENSION; c++)
             System.out.print("  " + c + " ");
         System.out.println("\n " + delim.repeat(DIMENSION) + "+");
@@ -60,16 +61,12 @@ class Solution {
         }
     }
 
-    // create the board
-    // randomly place the ship. Use Math.random() to return an int random numbers //
-    // display the board
-
     static void create_battleship() {
         // first, pick orientation
         // then, depending on orientation, we can constrain as follows:
         //
-        // if horizontal, then cols from 0 -> DIMENSION - SHIP_SIZE
-        // if vertical , then rows from 0 -> DIMENSION - SHIP_SIZE
+        // if horizontal, then cols from 0 -> (DIMENSION - SHIP_SIZE)
+        // if vertical , then rows from 0 -> (DIMENSION - SHIP_SIZE)
 
         int orientation = (int) (Math.random() * 2);
 
@@ -85,7 +82,7 @@ class Solution {
         int row = (int) (Math.random() * row_max);
         int col = (int) (Math.random() * col_max);
 
-        if(DEBUG) {
+        if (DEBUG) {
             System.out.println("Orientation: " + (orientation == 0 ? "Horizontal" : "Vertical"));
             System.out.println("Row max: " + row_max);
             System.out.println("Col max: " + col_max);
@@ -131,7 +128,9 @@ class Solution {
             print_board(_guesses);
 
             int[] guess = get_guess(in);
-            System.out.println(Arrays.toString(guess));
+
+            if (DEBUG)
+                System.out.println(Arrays.toString(guess));
 
             if(guess_hit(guess))
                 hits++;
