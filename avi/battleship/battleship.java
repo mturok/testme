@@ -6,6 +6,7 @@ class Solution {
     static final int SHIP_SIZE = 4; // constant for the size of the ship
     static final int DIMENSION = 10; // constant for the size of the board (square)
 
+    static boolean DEBUG = true;
 
     static char[][] _board = new char[DIMENSION][DIMENSION];
     static char[][] _guesses = new char[DIMENSION][DIMENSION];
@@ -81,14 +82,15 @@ class Solution {
         if (orientation == 1) // vertical
             row_max -= SHIP_SIZE;
 
-        // System.out.println("Orientation: " + (orientation == 0 ? "Horizontal" : "Vertical"));
-        // System.out.println("Row max: " + row_max);
-        // System.out.println("Col max: " + col_max);
-
         int row = (int) (Math.random() * row_max);
         int col = (int) (Math.random() * col_max);
 
-        // System.out.format("Row: %d, Col: %d\n", row, col);
+        if(DEBUG) {
+            System.out.println("Orientation: " + (orientation == 0 ? "Horizontal" : "Vertical"));
+            System.out.println("Row max: " + row_max);
+            System.out.println("Col max: " + col_max);
+            System.out.format("Row: %d, Col: %d\n", row, col);
+        }
 
         if (orientation == 0) // horizontal
             for (int c = 0; c < SHIP_SIZE; c++)
@@ -117,15 +119,17 @@ class Solution {
         init(_guesses);
 
         create_battleship();
-        print_board(_board);
 
+        if(DEBUG)
+            print_board(_board);
 
         int hits = 0;
         int misses = 0;
 
         Scanner in = new Scanner(System.in);
-
         while(hits < SHIP_SIZE) {
+            print_board(_guesses);
+
             int[] guess = get_guess(in);
             System.out.println(Arrays.toString(guess));
 
@@ -134,8 +138,8 @@ class Solution {
             else
                 misses++;
 
-            print_board(_guesses);
         }
-        System.out.format("You won: %d guesses\n", hits + misses);
+        System.out.format("\n\n======>YOU WON: %d guesses\n", hits + misses);
+        print_board(_guesses);
     }
 }
