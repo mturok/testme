@@ -15,12 +15,11 @@ public class Solution
 
     public static void printman(StringBuilder guessed)
     {
-        for(int r = 0; r < _buffer.length; r++)
-            {
-                for(int c = 0; c < _buffer[r].length; c++)
-                    System.out.print(_buffer[r][c]);
-                System.out.println();
-            }
+        for(int r = 0; r < _buffer.length; r++) {
+            for(int c = 0; c < _buffer[r].length; c++)
+                System.out.print(_buffer[r][c]);
+            System.out.println();
+        }
         System.out.println("\nMy guess so far: " + guessed.toString());
     }
 
@@ -41,11 +40,10 @@ public class Solution
 
     public static void draw(char c, int coords[][])
     {
-        for (int i = 0; i < coords.length; i++)
-            {
-                int [] coord = coords[i];
-                _buffer[coord[0]][coord[1]] = c;
-            }
+        for (int i = 0; i < coords.length; i++) {
+            int [] coord = coords[i];
+            _buffer[coord[0]][coord[1]] = c;
+        }
     }
 
     public static void head()
@@ -147,10 +145,9 @@ public class Solution
             String[] words = lines.toArray(new String[0]);
             return words;
         }
-        finally
-            {
-                reader.close();
-            }
+        finally {
+            reader.close();
+        }
     }
 
     public static String[] words_file() throws Exception {
