@@ -61,7 +61,27 @@ class Solution {
         }
     }
 
-    static void create_battleship() {
+    static void create_battleship_retry(char ship, int ship_size)  {
+        int MAX_RETRIES = 1000;
+        for(int i = 0; i < MAX_RETRIES; i++) {
+            if( DEBUG )
+                System.out.format("Create ship: %c, length, %d, try #: %d\n", ship, ship_size, i);
+            if (create_battleship(ship, ship_size))
+                return;
+        }
+
+        System.err.format( "Tried %d times - failed to create ship: %c of size: %d\n", MAX_RETRIES, ship, ship_size);
+        print_board(_board);
+        System.exit(-1);
+    }
+
+
+    static void create_battleships(int [][] ships) {
+        for(int i = 0; i < ships.length; i++)
+            create_battleship_retry((char)ships[i][0], ships[i][1]);
+    }
+
+    static boolean create_battleship(char ship, int ship_size)  {
         // first, pick orientation
         // then, depending on orientation, we can constrain as follows:
         //
@@ -70,52 +90,61 @@ class Solution {
 
         int orientation = (int) (Math.random() * 2);
 
-        int row_max = DIMENSION;
-        int col_max = DIMENSION;
-
-        if (orientation == 0) // horizontal
-            col_max -= SHIP_SIZE;
-
-        if (orientation == 1) // vertical
-            row_max -= SHIP_SIZE;
+        int row_max = orientation == 0 ? DIMENSION : DIMENSION - ship_size;
+        int col_max = orientation == 1 ? DIMENSION : DIMENSION - ship_size;
 
         int row = (int) (Math.random() * row_max);
         int col = (int) (Math.random() * col_max);
+
+        int row_end = orientation == 0 ? row + 1 : row + ship_size;
+        int col_end = orientation == 1 ? col + 1 : col + ship_size;
 
         if (DEBUG) {
             System.out.println("Orientation: " + (orientation == 0 ? "Horizontal" : "Vertical"));
             System.out.println("Row max: " + row_max);
             System.out.println("Col max: " + col_max);
-            System.out.format("Row: %d, Col: %d\n", row, col);
+            System.out.format("Row: %d, Col: %d\n\n", row, col);
         }
 
-        if (orientation == 0) // horizontal
-            for (int c = 0; c < SHIP_SIZE; c++)
-                _board[row][c+col] = 'X';
+        // check for no other boats
+        for (int r = row; r < row_end; r++)
+            for(int c = col; c < col_end; c++)
+                if (_board[r][c] != ' ')
+                    return false;
 
-        if (orientation == 1) // vertical
-            for (int r = 0; r < SHIP_SIZE; r++)
-                _board[row+r][col] = 'X';
+        // fill in the character
+        for (int r = row; r < row_end; r++)
+            for(int c = col; c < col_end; c++)
+                _board[r][c] = ship;
+
+        return true;
     }
 
     static boolean guess_hit(int [] guess) {
         int row = guess[0];
         int col = guess[1];
 
-        if (_board[row][col] == 'X') {
-            _guesses[row][col] = 'X';
-            return true;
-        };
 
-        _guesses[row][col] = '#';
-        return false;
+        if (_board[row][col] == ' ') {
+            _guesses[row][col] = '#';
+            return false;
+        }
+
+        _guesses[row][col] = 'X';
+        return true;
     }
+
 
     public static void main(String[] args) {
         init(_board);
         init(_guesses);
 
-        create_battleship();
+        int [][] ships = {
+            { 'B', SHIP_SIZE }, { 'C', SHIP_SIZE + 1 }, { 'S', SHIP_SIZE - 1 }, { 'D', SHIP_SIZE - 2 }
+            // { 'B', SHIP_SIZE }
+        };
+
+        create_battleships(ships);
 
         if(DEBUG)
             print_board(_board);
@@ -123,8 +152,12 @@ class Solution {
         int hits = 0;
         int misses = 0;
 
+        int num_hits = 0;
+        for(int i = 0; i < ships.length; i++)
+            num_hits += ships[i][1];
+
         Scanner in = new Scanner(System.in);
-        while(hits < SHIP_SIZE) {
+        while(hits < num_hits) {
             print_board(_guesses);
 
             int[] guess = get_guess(in);
