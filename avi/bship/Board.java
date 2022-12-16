@@ -29,24 +29,15 @@ public class Board {
     System.out.println(" " + pattern.repeat(DIMENSION) + "+");
   }
 
-  public void ship() {// randomply placing ship
-    int col_max = DIMENSION;
-    int row_max = DIMENSION;
-    int orientation = (int) (Math.random() * 2);// random orientation
+  public void create_ship() {
 
-    if (orientation == 0) // if horizontal, reduce number of cols
-      col_max -= SHIP_SIZE;
-    else // if vertical, reduce number of rows
-      row_max -= SHIP_SIZE;
+    Ship ship = new Ship(DIMENSION, SHIP_SIZE);
 
-    int row = (int) (Math.random() * row_max);
-    int col = (int) (Math.random() * col_max);
-
-    if (orientation == 0)
-      for (int c = 0; c < SHIP_SIZE; c++)
-        this._data[row][c + col] = 'B';
+    if(ship._orientation==0)
+      for(int c = 0; c < SHIP_SIZE; c++)
+        _data[ship._row][c+ship._col] = 'B';
     else
-      for (int r = 0; r < SHIP_SIZE; r++)
-        this._data[r + row][col] = 'B';
+      for(int r = 0; r < SHIP_SIZE; r++)
+        _data[r+ship._row][ship._col] = 'B';
   }
 }

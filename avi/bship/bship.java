@@ -3,17 +3,18 @@ import java.util.*;
 
 
 public class bship{
-    Guess guess = new Guess();
 
     static int SHIP_SIZE = 4;
     static int DIMENSION = 10;
 
     public static void main(String[] args)  {
 
-      Board board = new Board();
+      Guess guess = new Guess();
       Board guesses = new Board();
 
-      board.ship();// creation of ship
+      Board board = new Board();
+      board.create_ship();
+
       board.printgrid(); // - for debugging
       guesses.printgrid();// printing board
 
