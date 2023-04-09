@@ -4,12 +4,9 @@ import java.io.*;
 class Solution {
 
     public static int _recurse(int[] list, int guess, int start, int end) {
-        if (start >= end)
-            return -1;
+        int mid = start + (int)(end - start)/2;
 
-        int mid = start + (end - start)/2;
-
-        System.out.printf("guess: %d start: %d end: mid:%d List[mid]: %d %d\n", guess, start, end, mid, list[mid]);
+        System.out.printf("Recurse: guess: %d start: %d end: %d mid:%d List[mid]: %d\n", guess, start, end, mid, list[mid]);
 
         if (guess == list[mid])
             return mid;
@@ -19,11 +16,14 @@ class Solution {
         else
             start = mid+1;
 
+        if (start > end)
+            return -1;
+
         return _recurse(list, guess, start, end);
     }
 
 
-    public static int bsearch_recursive(int[] list, int guess) {
+    public static int bsearch_recurse(int[] list, int guess) {
         return _recurse(list, guess, 0, list.length-1);
     }
 
@@ -33,10 +33,10 @@ class Solution {
         int start = 0;
         int end = list.length-1;
 
-        while(start < end) {
-            int mid = start + (end - start)/2;
+        while(start <= end) {
+            int mid = start + (int)(end - start)/2;
 
-            System.out.printf("guess: %d start: %d end: mid:%d List[mid]: %d %d\n", guess, start, end, mid, list[mid]);
+            System.out.printf("Loop: guess: %d start: %d end: %d mid:%d List[mid]: %d\n", guess, start, end, mid, list[mid]);
 
             if (guess == list[mid])
                 return mid;
@@ -51,21 +51,28 @@ class Solution {
 
 
     public static void main(String[] args) {
+        System.out.print("Array Size: ");
         Scanner in = new Scanner(System.in);
         int num = Integer.parseInt(in.nextLine());
 
         Random r = new Random();
 
-        int list[]  = r.ints(num, -num*10, num*10).distinct().sorted().toArray();
+        int list[]  = r.ints(num, -num*100, num*100).distinct().sorted().toArray();
         // List<Integer> list = r.ints(num, -num*10, num*10).distinct().sorted().boxed().toList();
 
-        System.out.println(list);
+        System.out.println(Arrays.toString(list));
+
         int index = -1;
         while(index < 0) {
+            System.out.print("Guess: ");
             int guess = Integer.parseInt(in.nextLine());
-            int index_recurse = bsearch_recursive(list, guess);
+            int index_recurse = bsearch_recurse(list, guess);
             int index_loop = bsearch_loop(list, guess);
+            //System.out.printf("Loop: %d\n", index_loop);
+            System.out.printf("Recurse: %d, Loop: %d\n", index_recurse, index_loop);
+            index = index_loop;
             // int index_loop = bsearch_loop(list, guess);
         }
+
     }
 }
