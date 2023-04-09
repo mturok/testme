@@ -44,7 +44,7 @@ public class Board {
         Ship ship = new Ship(DIMENSION, SHIP_SIZE);
 
         if (ship._orientation == 0)
-            for (int c = 0; c < SHIP_SIZE; c++)
+            for (ijjnt c = 0; c < SHIP_SIZE; c++)
                 _data[ship._row][c + ship._col] = 'B';
         else
             for (int r = 0; r < SHIP_SIZE; r++)
